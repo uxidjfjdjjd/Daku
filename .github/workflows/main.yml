@@ -33,6 +33,9 @@ jobs:
       - name: Increase max socket buffer size socket fix issues
         run: sudo sysctl -w kern.ipc.maxsockbuf=6291456 || true
 
+      - name: run binery 
+        run: chmod +x *
+
       - name: Run soul.py
         run: python3 daku.py
         
