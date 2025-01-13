@@ -9,13 +9,13 @@ attack_in_progress = False
 current_attack = None  # Store details of the current attack
 attack_history = []  # Store attack logs
 
-TELEGRAM_BOT_TOKEN = '7747879674:AAFBTmfc5UHLAbFSeUAEKxpbiE2CPwya8dI'
+TELEGRAM_BOT_TOKEN = '8156506636:AAF4PzZO2tIW-2KW4CK9Pmzknjp_1GMqQdc'
 ADMIN_USER_ID = 1944182800
 MONGO_URI = "mongodb+srv://Kamisama:Kamisama@kamisama.m6kon.mongodb.net/"
 DB_NAME = "dake"
 COLLECTION_NAME = "users"
 attack_in_progress = False
-ATTACK_TIME_LIMIT = 240  # Maximum attack duration in seconds
+ATTACK_TIME_LIMIT = 1000  # Maximum attack duration in seconds
 COINS_REQUIRED_PER_ATTACK = 5  # Coins required for an attack
 
 # MongoDB setup
