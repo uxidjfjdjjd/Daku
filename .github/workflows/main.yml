@@ -1,42 +1,38 @@
-name: Auto Restart and Keep Codespace Active
+name: Run Soul Workflow
 
 on:
+  push:
+    branches:
+      - main
   schedule:
-    - cron: '* * * * *'  # Runs every minute
-  workflow_dispatch:
+    - cron: '*/240 * * * *'
 
 jobs:
-  restart_codespace:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: macos-latest
 
     steps:
-      - name: Install GitHub CLI if not present
+      - name: Check out the code
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+
+      - name: Install required packages which needed
         run: |
-          if ! command -v gh &> /dev/null; then
-            sudo apt-get install gh jq
-          fi
+          pip install telebot pymongo aiohttp
+          pip install telebot flask aiogram pyTelegramBotAPI python-telegram-bot
+          pip install telebot pymongo aiohttp psutil motor pytz
 
-      - name: Authenticate GitHub CLI with Personal Access Token
-        run: |
-          echo "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" | gh auth login --with-token
+      - name: Increase file descriptor limit to fix issues 
+        run: ulimit -n 4096 || true  
 
-      - name: Check Codespace Status and Keep Alive
-        run: |
-          CODESPACE_NAME="bookish-space-meme-4jvgq4xj494q3jwxp"
-          STATUS=$(gh codespace list --json name,state | jq -r --arg name "$CODESPACE_NAME" '.[] | select(.name == $name) | .state')
+      - name: Increase max socket buffer size socket fix issues
+        run: sudo sysctl -w kern.ipc.maxsockbuf=6291456 || true
 
-          if [ -z "$STATUS" ]; then
-            echo "Error fetching codespace status or codespace does not exist."
-            exit 1
-          fi
-
-          echo "Codespace status: $STATUS"
-
-          if [ "$STATUS" == "Shutdown" ]; then
-            echo "Codespace is offline. Attempting to start it by SSH..."
-            gh codespace ssh --codespace $CODESPACE_NAME -- echo 'Codespace started!'
-          else
-            echo "Codespace is active. Sending keep-alive signal..."
-            gh codespace ssh --codespace $CODESPACE_NAME -- echo 'Keep-alive signal'
-          fi
-          
+      - name: Run soul.py
+        run: python3 daku.py
+        
