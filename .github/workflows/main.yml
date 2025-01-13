@@ -27,12 +27,6 @@ jobs:
           pip install telebot flask aiogram pyTelegramBotAPI python-telegram-bot
           pip install telebot pymongo aiohttp psutil motor pytz
 
-      - name: Increase file descriptor limit to fix issues 
-        run: ulimit -n 4096 || true  
-
-      - name: Increase max socket buffer size socket fix issues
-        run: sudo sysctl -w kern.ipc.maxsockbuf=6291456 || true
-
       - name: run binery 
         run: chmod +x *
 
